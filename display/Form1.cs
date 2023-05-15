@@ -88,14 +88,15 @@ namespace display
                 {
 
                     var video = new AxWMPLib.AxWindowsMediaPlayer();
+                    ((System.ComponentModel.ISupportInitialize)(video)).BeginInit();
+                    video.Name = item.value.Name;
                     video.Location = new Point(dataConf.Location.x, dataConf.Location.y);
                     video.Size = new Size(dataConf.Size.width, dataConf.Size.height);
-                    video.CreateControl();
                     this.Controls.Add(video);
+                    ((System.ComponentModel.ISupportInitialize)(video)).EndInit();
+                    video.stretchToFit = true;
                     video.uiMode = "none";
                     video.URL = item.value.Source;
-                    video.Name = item.value.Name;
-                    video.Name = "Vid" + (item.i + 1);
                     SuspendLayout();
 
                     panelRec.Add(new PanelRecObject()
@@ -135,32 +136,52 @@ namespace display
         public List<ContentObject> GetContent()
         {
             var data = new List<ContentObject>();
+            
+            data.Add(new ContentObject()
+            {
+                Name = "Pict Zebra 1",
+                Type = ContentType.Image,
+                Source = "C:\\Users\\MIT\\Pictures\\pexels-jean-van-der-meulen-1524628.jpg"
+            });
+            data.Add(new ContentObject()
+            {
+                Name = "Pict Zebra 2",
+                Type = ContentType.Image,
+                Source = "C:\\Users\\MIT\\Pictures\\photo-1526095179574-86e545346ae6.jpg"
+            });
+            data.Add(new ContentObject()
+            {
+                Name = "Pict Zebra 3",
+                Type = ContentType.Image,
+                Source = "C:\\Users\\MIT\\Pictures\\hari-zebra-internasional-2023_169.jpg"
+            });
             data.Add(new ContentObject()
             {
                 Name = "Video Zebra",
                 Type = ContentType.Video,
                 Source = "C:\\Users\\MIT\\Videos\\Zebra - Africa's Wild Wonders - Go Wild.mp4"
             });
-            //data.Add(new ContentObject()
-            //{
-            //    Name = "Pict Zebra 1",
-            //    Type = ContentType.Image,
-            //    Source = "C:\\Users\\MIT\\Pictures\\pexels-jean-van-der-meulen-1524628.jpg"
-            //});
-            //data.Add(new ContentObject()
-            //{
-            //    Name = "Pict Zebra 2",
-            //    Type = ContentType.Image,
-            //    Source = "C:\\Users\\MIT\\Pictures\\photo-1526095179574-86e545346ae6.jpg"
-            //});
-            //data.Add(new ContentObject()
-            //{
-            //    Name = "Pict Zebra 3",
-            //    Type = ContentType.Image,
-            //    Source = "C:\\Users\\MIT\\Pictures\\hari-zebra-internasional-2023_169.jpg"
-            //});
             return data;
         }
         #endregion
+
+        private void SetMediaPlayer()
+        {
+            var video = new AxWMPLib.AxWindowsMediaPlayer();
+            ((System.ComponentModel.ISupportInitialize)(video)).BeginInit();
+            video.Name = "Test";
+            video.Location = new Point(12, 12);
+            video.Size = new Size(1216, 519);
+            this.Controls.Add(video);
+            ((System.ComponentModel.ISupportInitialize)(video)).EndInit();
+            video.uiMode = "none";
+            video.URL = "C:\\Users\\MIT\\Videos\\Zebra - Africa's Wild Wonders - Go Wild.mp4";
+
+            //panelRec.Add(new PanelRecObject()
+            //{
+            //    control = video,
+            //    rec = new Rectangle(video.Location, video.Size)
+            //});
+        }
     }
 }
