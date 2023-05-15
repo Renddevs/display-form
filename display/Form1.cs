@@ -48,25 +48,11 @@ namespace display
 
                 if (item.value.Type == ContentType.Web)
                 {
-                    //var control = new PictureBox();
-                    //this.Controls.Add(control);
-                    //control.ImageLocation = "C:\\Users\\MIT\\Pictures\\Screenshots\\Screenshot (9).png";
-                    //control.Name = item.value.Name;
-                    //control.BackColor = Color.Red;
-                    //control.Location = new Point(dataConf.Location.x, dataConf.Location.y);
-                    //control.Name = "Panel" + (item.i + 1);
-                    //control.Size = new Size(dataConf.Size.width, dataConf.Size.height);
-                    //control.TabIndex = 0;
-                    //SuspendLayout();
-
-                    //panelRec.Add(new PanelRecObject()
-                    //{
-                    //    control = control,
-                    //    rec = new Rectangle(control.Location, control.Size)
-                    //});
+                    SetContentWeb(item.value, dataConf);
                 }
                 else if (item.value.Type == ContentType.Image)
                 {
+                    #region Set Content Image
                     var img = new PictureBox();
                     this.Controls.Add(img);
                     img.ImageLocation = item.value.Source;
@@ -83,10 +69,11 @@ namespace display
                         control = img,
                         rec = new Rectangle(img.Location, img.Size)
                     });
+                    #endregion
                 }
                 else if (item.value.Type == ContentType.Video)
                 {
-
+                    #region Set Content Video
                     var video = new AxWMPLib.AxWindowsMediaPlayer();
                     ((System.ComponentModel.ISupportInitialize)(video)).BeginInit();
                     video.Name = item.value.Name;
@@ -104,6 +91,7 @@ namespace display
                         control = video,
                         rec = new Rectangle(video.Location, video.Size)
                     });
+                    #endregion
                 }
             }
         }
@@ -140,48 +128,58 @@ namespace display
             data.Add(new ContentObject()
             {
                 Name = "Pict Zebra 1",
-                Type = ContentType.Image,
-                Source = "C:\\Users\\MIT\\Pictures\\pexels-jean-van-der-meulen-1524628.jpg"
+                Type = ContentType.Web,
+                Source = "https://www.youtube.com/watch?v=qpi9YXaChHI"
             });
             data.Add(new ContentObject()
             {
                 Name = "Pict Zebra 2",
                 Type = ContentType.Image,
-                Source = "C:\\Users\\MIT\\Pictures\\photo-1526095179574-86e545346ae6.jpg"
+                Source = "C:\\Users\\rendd\\OneDrive\\Pictures\\Screenshot 2023-02-27 102026.png"
             });
-            data.Add(new ContentObject()
-            {
-                Name = "Pict Zebra 3",
-                Type = ContentType.Image,
-                Source = "C:\\Users\\MIT\\Pictures\\hari-zebra-internasional-2023_169.jpg"
-            });
-            data.Add(new ContentObject()
-            {
-                Name = "Video Zebra",
-                Type = ContentType.Video,
-                Source = "C:\\Users\\MIT\\Videos\\Zebra - Africa's Wild Wonders - Go Wild.mp4"
-            });
+            //data.Add(new ContentObject()
+            //{
+            //    Name = "Pict Zebra 3",
+            //    Type = ContentType.Image,
+            //    Source = "C:\\Users\\MIT\\Pictures\\hari-zebra-internasional-2023_169.jpg"
+            //});
+            //data.Add(new ContentObject()
+            //{
+            //    Name = "Video Zebra",
+            //    Type = ContentType.Video,
+            //    Source = "C:\\Users\\MIT\\Videos\\Zebra - Africa's Wild Wonders - Go Wild.mp4"
+            //});
             return data;
         }
         #endregion
 
-        private void SetMediaPlayer()
+        #region Set Content Web
+        public async Task SetContentWeb(ContentObject value, LayoutObject dataConf)
         {
-            var video = new AxWMPLib.AxWindowsMediaPlayer();
-            ((System.ComponentModel.ISupportInitialize)(video)).BeginInit();
-            video.Name = "Test";
-            video.Location = new Point(12, 12);
-            video.Size = new Size(1216, 519);
-            this.Controls.Add(video);
-            ((System.ComponentModel.ISupportInitialize)(video)).EndInit();
-            video.uiMode = "none";
-            video.URL = "C:\\Users\\MIT\\Videos\\Zebra - Africa's Wild Wonders - Go Wild.mp4";
+            var web = new Microsoft.Web.WebView2.WinForms.WebView2();
+            ((System.ComponentModel.ISupportInitialize)(web)).BeginInit();
+            web.SuspendLayout();
+            web.AllowExternalDrop = true;
+            web.CreationProperties = null;
+            web.DefaultBackgroundColor = System.Drawing.Color.White;
+            web.Location = new System.Drawing.Point(dataConf.Location.x, dataConf.Location.y);
+            web.Name = value.Name;
+            web.Size = new System.Drawing.Size(dataConf.Size.width, dataConf.Size.height);
+            web.TabIndex = 0;
+            web.ZoomFactor = 1D;
+            this.Controls.Add(web);
+            ((System.ComponentModel.ISupportInitialize)(web)).EndInit();
+            this.ResumeLayout(false);
+            await web.EnsureCoreWebView2Async(null);
+            web.CoreWebView2.Navigate(value.Source);
 
-            //panelRec.Add(new PanelRecObject()
-            //{
-            //    control = video,
-            //    rec = new Rectangle(video.Location, video.Size)
-            //});
+            panelRec.Add(new PanelRecObject()
+            {
+                control = web,
+                rec = new Rectangle(web.Location, web.Size)
+            });
+
         }
+        #endregion
     }
 }
